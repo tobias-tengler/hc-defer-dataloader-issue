@@ -33,9 +33,14 @@ public class Wrapper
 {
     public int Id { get; set; }
 
-    public Task<string> GetValueAsync([Parent] Wrapper wrapper, [DataLoader] ValueDataLoader dataLoader)
+    public async Task<string> GetValueAsync([Parent] Wrapper wrapper, [DataLoader] ValueDataLoader dataLoader)
     {
-        return dataLoader.LoadAsync(wrapper.Id);
+        await Task.Delay(2000);
+
+        return $"MyValue:{wrapper.Id}";
+
+        // happens with and without the DataLoader
+        //return dataLoader.LoadAsync(wrapper.Id);
     }
 }
 
