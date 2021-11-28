@@ -35,12 +35,31 @@ public class Query
         return "field2";
     }
 
-    public List<Wrapper> GetWrappers() => new List<Wrapper>
+    public List<Wrapper> GetWrappers() => new()
     {
         new Wrapper { Id = 1 },
         new Wrapper { Id = 2 },
         new Wrapper { Id = 3 }
     };
+
+    public DeferTest GetComplexType() => new();
+}
+
+public class DeferTest
+{
+    public async Task<string> ComplexField1()
+    {
+        await Task.Delay(2500);
+
+        return "complexfield1";
+    }
+
+    public async Task<string> ComplexField2()
+    {
+        await Task.Delay(2500);
+
+        return "complexfield2";
+    }
 }
 
 public class Wrapper
