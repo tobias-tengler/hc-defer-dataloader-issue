@@ -21,6 +21,20 @@ app.Run();
 
 public class Query
 {
+    public async Task<string> Field1()
+    {
+        await Task.Delay(2500);
+
+        return "field1";
+    }
+
+    public async Task<string> Field2()
+    {
+        await Task.Delay(2500);
+
+        return "field2";
+    }
+
     public List<Wrapper> GetWrappers() => new List<Wrapper>
     {
         new Wrapper { Id = 1 },
