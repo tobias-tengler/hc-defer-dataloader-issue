@@ -2,6 +2,7 @@ using GreenDonut;
 using HotChocolate;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -23,14 +24,14 @@ public class Query
 {
     public async Task<string> Field1()
     {
-        await Task.Delay(2500);
+        await Task.Delay(1000);
 
         return "field1";
     }
 
     public async Task<string> Field2()
     {
-        await Task.Delay(2500);
+        await Task.Delay(5000);
 
         return "field2";
     }
@@ -49,14 +50,14 @@ public class DeferTest
 {
     public async Task<string> ComplexField1()
     {
-        await Task.Delay(2500);
+        await Task.Delay(1000);
 
         return "complexfield1";
     }
 
     public async Task<string> ComplexField2()
     {
-        await Task.Delay(2500);
+        await Task.Delay(5000);
 
         return "complexfield2";
     }
@@ -66,28 +67,11 @@ public class Wrapper
 {
     public int Id { get; set; }
 
-    public async Task<string> GetValueAsync([Parent] Wrapper wrapper, [DataLoader] ValueDataLoader dataLoader)
+    public async Task<string> GetValueAsync([Parent] Wrapper wrapper)
     {
-        await Task.Delay(2000);
+        var wait = wrapper.Id == 1 ? 1000 : 5000;
+        await Task.Delay(wait);
 
-        return $"MyValue:{wrapper.Id}";
-
-        // happens with and without the DataLoader
-        //return dataLoader.LoadAsync(wrapper.Id);
-    }
-}
-
-public class ValueDataLoader : BatchDataLoader<int, string>
-{
-    public ValueDataLoader(IBatchScheduler batchScheduler, DataLoaderOptions? options = null)
-        : base(batchScheduler, options)
-    {
-    }
-
-    protected override async Task<IReadOnlyDictionary<int, string>> LoadBatchAsync(IReadOnlyList<int> keys, CancellationToken cancellationToken)
-    {
-        await Task.Delay(2000);
-
-        return keys.ToDictionary(k => k, k => $"MyValue:{k}");
+        return $"MyValue:{wrapper.Id}:{wait}";
     }
 }
